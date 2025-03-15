@@ -44,9 +44,9 @@ export const registerUser = async(name:string,email:string,password:string,)=>{
     
 }
 
-export const verifyOTP = async(otp:string,email:string)=>{
+export const verifyOTP = async(otp:string,tempEmail:string)=>{
 
-    const user = await findByEmail(email);
+    const user = await findByEmail(tempEmail);
 
     if (!user) {
         throw new Error('User not found');
