@@ -4,4 +4,9 @@ const findByEmail = async (email: string) => {
     return User.findOne({ email });
   };
 
-export { findByEmail };
+const createUser = async(userData:any)=>{
+    return User.create(userData)
+}
+
+
+export { findByEmail,createUser };
