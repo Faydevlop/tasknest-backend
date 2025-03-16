@@ -28,8 +28,6 @@ export const register  = async(req:Request,res:Response)=>{
 
 export const verifyOTPHandler = async(req:Request,res:Response)=>{
     const {otp,tempEmail} = req.body
-    console.log(req.body);
-    
     try {
         const {user, token} = await verifyOTP(otp,tempEmail)
         res.status(200).json({ message: 'Signin Successfully',token,user });

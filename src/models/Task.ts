@@ -5,7 +5,7 @@ interface ITask extends Document {
   description: string;
   assignedTo: mongoose.Types.ObjectId;
   assignedBy: mongoose.Types.ObjectId;
-  dueDate: Date;
+  date: Date;
   status: 'Pending' | 'In Progress' | 'Completed';
 }
 
@@ -14,8 +14,8 @@ const taskSchema = new Schema<ITask>({
   description: { type: String, required: true },
   assignedTo: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   assignedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  dueDate: { type: Date, required: true },
-  status: { type: String, enum: ['Pending', 'In Progress', 'Completed'], default: 'Pending' },
+  date: { type: Date, required: true },
+  status: { type: String, enum: ['pending', 'in-progress', 'completed'], default: 'Pending' },
 }, {
   timestamps: true, 
 });
