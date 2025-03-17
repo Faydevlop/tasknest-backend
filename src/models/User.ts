@@ -24,7 +24,7 @@ const userSchema = new Schema<IUser>({
   otpExpires: { type: Date }, 
   isVerified: { type: Boolean, default: false },
   role: { type: String, enum: ['Manager', 'Employee'], default: 'Employee' },
-  managerId: { type: Schema.Types.ObjectId, ref: 'User', default:'67d5e8785016561d9db30d03' } 
+  managerId: { type: Schema.Types.ObjectId, ref: 'User', default:'67d82062230ec1b1ae970bc6' } 
 });
 
 
