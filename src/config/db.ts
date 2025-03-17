@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config()
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/task-manager';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://fayfayis74:fayfayis74@urlshortner.57uau.mongodb.net/tasknest?retryWrites=true&w=majority&appName=urlshortner' ;
 
 const connectDB = async()=>{
     try {
