@@ -10,6 +10,8 @@ interface IUser extends Document {
   avatar:string,
   isVerified:boolean
   otpExpires:Date | undefined
+  managerId: mongoose.Types.ObjectId
+
 }
 
 // Define the schema
@@ -22,7 +24,9 @@ const userSchema = new Schema<IUser>({
   otpExpires: { type: Date }, 
   isVerified: { type: Boolean, default: false },
   role: { type: String, enum: ['Manager', 'Employee'], default: 'Employee' },
+  managerId: { type: Schema.Types.ObjectId, ref: 'User', default:'67d5e8785016561d9db30d03' } 
 });
+
 
 // Export the model
 export default mongoose.model<IUser>('User', userSchema);

@@ -1,12 +1,28 @@
 import { Request, Response } from 'express';
-import { listUsers } from '../services/userServie.ts';
+import {  listUsersbyManager, promoteUserToManager } from '../services/userServie.ts';
+import { AuthenticatedRequest } from '../utils/jwt.ts';
 
-export const listUser = async(req:Request,res:Response)=>{
-
+export const listUser = async(req:AuthenticatedRequest,res:Response)=>{
+    const managerId = req.user?.id
     try {
-        const users = await listUsers()
+        if (!managerId) {
+            throw new Error("Manager ID is undefined");
+        }
+        const users = await listUsersbyManager(managerId);
         res.status(200).json({ users }); 
     } catch (error:any) {
         res.status(400).json({ message: error.message });
+    }
+}
+
+export const promoteUser = async(req:AuthenticatedRequest,res:Response)=>{
+    // const managerId = req.user?.id
+    try {
+        const {selectedUser,selectedUserIds} = req.body
+    const user = await promoteUserToManager(selectedUser,selectedUserIds )
+    res.status(200).json({ message:'user promoted' }); 
+    } catch (error:any) {
+        res.status(400).json({ message: error.message });
+        
     }
 }

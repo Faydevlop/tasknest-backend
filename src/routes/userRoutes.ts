@@ -1,9 +1,12 @@
 import express from 'express';
-import { listUser } from '../controllers/userController.ts';
+import { listUser, promoteUser } from '../controllers/userController.ts';
+import authenticateJWT from '../utils/jwt.ts';
 
 const router = express.Router()
 
-// List Users 
-router.get('/listallUsers',listUser)
+// List Users by manager
+router.get('/listallUsers',authenticateJWT,listUser)
+// Promote user by manager
+router.put('/promote',authenticateJWT,promoteUser)
 
 export default router;
