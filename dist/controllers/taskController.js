@@ -1,0 +1,95 @@
+import { createTaskHandler, handleTaskListByManager, handleTaskListByUser, findTaskAndDelete, handleUpdateTask, handleGetInfoByUser, handleGetInfoByManager } from '../services/taskService.ts';
+export const createTasks = async (req, res) => {
+    const { assignedBy, assignedTo, date, description, status, title } = req.body;
+    console.log(req.body);
+    console.log(req.user);
+    try {
+        const task = await createTaskHandler(assignedBy, assignedTo, date, description, status, title);
+        res.status(200).json({ message: 'Task Created', task });
+    }
+    catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+export const getTasksList = async (req, res) => {
+    if (!req.user) {
+        console.log('User is undefined');
+        res.status(401).json({ message: 'Unauthorized access' });
+        return;
+    }
+    const userId = req.user.id;
+    const userRole = req.user.role;
+    try {
+        let tasks;
+        if (userRole === 'Employee') {
+            tasks = await handleTaskListByUser(userId);
+        }
+        else if (userRole === 'Manager') {
+            tasks = await handleTaskListByManager(userId);
+        }
+        else {
+            res.status(403).json({ message: 'Forbidden: Invalid Role' });
+            return;
+        }
+        if (!tasks || tasks.length === 0) {
+            res.status(404).json({ message: 'No tasks found' });
+            return;
+        }
+        res.status(200).json({ message: 'Tasks fetching success', tasks });
+    }
+    catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+export const deleteTask = async (req, res) => {
+    const taskId = req.params.id;
+    try {
+        await findTaskAndDelete(taskId);
+        res.status(200).json({ message: 'task deleted' });
+    }
+    catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+export const updateTaskHandler = async (req, res) => {
+    const taskId = req.params.id;
+    const { tasksId, taskTitle, taskDescription, taskStatus } = req.body;
+    console.log(taskId, req.body, 'here');
+    try {
+        await handleUpdateTask(taskId, { tasksId, taskTitle, taskDescription, taskStatus });
+        res.status(200).json({ message: 'Task update success' });
+    }
+    catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+export const getinfo = async (req, res) => {
+    if (!req.user) {
+        console.log('User is undefined');
+        res.status(401).json({ message: 'Unauthorized access' });
+        return;
+    }
+    const userId = req.user.id;
+    const userRole = req.user.role;
+    try {
+        let info;
+        if (userRole === 'Employee') {
+            info = await handleGetInfoByUser(userId);
+        }
+        else if (userRole === 'Manager') {
+            info = await handleGetInfoByManager(userId);
+        }
+        else {
+            res.status(403).json({ message: 'Forbidden: Invalid Role' });
+            return;
+        }
+        if (!info) {
+            res.status(404).json({ message: 'No info found' });
+            return;
+        }
+        res.status(200).json({ message: 'get info success', info });
+    }
+    catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
