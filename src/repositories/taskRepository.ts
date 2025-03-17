@@ -1,4 +1,5 @@
 import Task from "../models/Task.ts";
+import User from "../models/User.ts";
 
 export const createTask = async(taskData:any)=>{
     const task = await Task.create(taskData)
@@ -45,3 +46,48 @@ export const deleteTask = async(taskId:string)=>{
         
         return newTask
     }
+
+    export const getInfoByUser = async (userId: string) => {
+        try {
+          const totalTasks = await Task.countDocuments({ assignedTo: userId });
+          const completedTasks = await Task.countDocuments({
+            assignedTo: userId,
+            status: "completed",
+          });
+      
+          return {
+            totalTasks: totalTasks || 0,
+            completedTasks: completedTasks || 0,
+            totalEmployees: 0,
+
+          };
+        } catch (error) {
+          console.error("Error fetching user task info:", error);
+          throw error;
+        }
+      };
+
+      export const getInfoByManager = async (userId: string) => {
+        try {
+          // Count total tasks assigned by the manager
+          const totalTasks = await Task.countDocuments({ assignedBy: userId });
+      
+          // Count completed tasks assigned by the manager
+          const completedTasks = await Task.countDocuments({
+            assignedBy: userId,
+            status: "completed",
+          });
+      
+          // Count employees under this manager
+          const totalEmployees = await User.countDocuments({ managerId: userId });
+      
+          return {
+            totalTasks: totalTasks || 0,
+            completedTasks: completedTasks || 0,
+            totalEmployees: totalEmployees || 0,
+          };
+        } catch (error) {
+          console.error("Error fetching manager info:", error);
+          throw error;
+        }
+      };

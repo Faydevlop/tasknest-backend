@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createTaskHandler, handleTaskListByManager, handleTaskListByUser , findTaskAndDelete ,handleUpdateTask } from '../services/taskService.ts';
+import { createTaskHandler, handleTaskListByManager, handleTaskListByUser , findTaskAndDelete ,handleUpdateTask, handleGetInfoByUser, handleGetInfoByManager } from '../services/taskService.ts';
 import { AuthenticatedRequest } from '../utils/jwt.ts';
 
 export const createTasks = async(req:AuthenticatedRequest,res:Response)=>{
@@ -71,6 +71,43 @@ export const getTasksList = async (req: AuthenticatedRequest, res: Response): Pr
     try {
     await handleUpdateTask(taskId,{tasksId,taskTitle,taskDescription,taskStatus})
     res.status(200).json({ message: 'Task update success' });
+      
+    } catch (error:any) {
+      res.status(400).json({ message: error.message });
+      
+    }
+  }
+
+  export const getinfo = async(req:AuthenticatedRequest,res:Response)=>{
+
+    if (!req.user) {
+      console.log('User is undefined');
+      res.status(401).json({ message: 'Unauthorized access' });
+      return;
+    }
+
+    const userId = req.user.id;
+    const userRole = req.user.role;
+
+    try {
+      let info;
+  
+      if (userRole === 'Employee') {
+        info = await handleGetInfoByUser(userId);
+      } else if (userRole === 'Manager') {
+        info = await handleGetInfoByManager(userId);
+      } else {
+        res.status(403).json({ message: 'Forbidden: Invalid Role' });
+        return;
+      }
+  
+      if (!info ) {
+        res.status(404).json({ message: 'No info found' });
+        return;
+      }
+
+    res.status(200).json({ message: 'get info success' , info });
+
       
     } catch (error:any) {
       res.status(400).json({ message: error.message });

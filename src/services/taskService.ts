@@ -1,4 +1,4 @@
-import { createTask ,findTasksByEmployee,findTasksByManager, deleteTask, updateTask} from '../repositories/taskRepository.ts';
+import { createTask ,findTasksByEmployee,findTasksByManager, deleteTask, updateTask, getInfoByUser, getInfoByManager} from '../repositories/taskRepository.ts';
 
 export const createTaskHandler  = async(assignedBy:string,assignedTo:string,date:string,description:string,status:string,title:string)=>{
     const task = await createTask({assignedBy,assignedTo,date,description,status,title})
@@ -27,4 +27,16 @@ export const handleUpdateTask = async(taskId:string,taskData:any)=>{
     if(!updatedTask)throw new Error('Tasks Not Found')
     return updatedTask
 
+}
+
+export const handleGetInfoByUser = async(userId:string)=>{
+    const InfoOfUser = await getInfoByUser(userId)
+    if(!InfoOfUser) throw new Error('no info Found')
+    return InfoOfUser
+}
+
+export const handleGetInfoByManager = async(userId:string)=>{
+    const infoOfManager = await getInfoByManager(userId)
+    if(!infoOfManager) throw new Error('no info found')
+    return infoOfManager
 }

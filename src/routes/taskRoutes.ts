@@ -1,5 +1,5 @@
 import express from 'express';
-import { createTasks, deleteTask, getTasksList, updateTaskHandler } from '../controllers/taskController.ts';
+import { createTasks, deleteTask, getinfo, getTasksList, updateTaskHandler } from '../controllers/taskController.ts';
 import authenticateJWT from '../utils/jwt.ts';
 
 const router = express.Router()
@@ -12,5 +12,7 @@ router.get('/gettasks',authenticateJWT,getTasksList)
 router.delete('/:id',authenticateJWT,deleteTask)
 // updatetask route
 router.put('/:id',authenticateJWT,updateTaskHandler)
+// dashboard info manager / employee
+router.get('/info',authenticateJWT,getinfo)
 
 export default router;
