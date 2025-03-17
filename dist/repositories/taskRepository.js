@@ -1,48 +1,68 @@
-import Task from "../models/Task.ts";
-import User from "../models/User.ts";
-export const createTask = async (taskData) => {
-    const task = await Task.create(taskData);
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getInfoByManager = exports.getInfoByUser = exports.updateTask = exports.deleteTask = exports.findTasksByEmployee = exports.findTasksByManager = exports.createTask = void 0;
+const Task_1 = __importDefault(require("../models/Task"));
+const User_1 = __importDefault(require("../models/User"));
+const createTask = (taskData) => __awaiter(void 0, void 0, void 0, function* () {
+    const task = yield Task_1.default.create(taskData);
     return task;
-};
-export const findTasksByManager = async (managerId) => {
-    const tasks = await Task.find({ assignedBy: managerId }).populate('assignedTo');
+});
+exports.createTask = createTask;
+const findTasksByManager = (managerId) => __awaiter(void 0, void 0, void 0, function* () {
+    const tasks = yield Task_1.default.find({ assignedBy: managerId }).populate('assignedTo');
     if (!tasks) {
         throw new Error('Task not found');
     }
     return tasks;
-};
-export const findTasksByEmployee = async (employeeId) => {
-    const tasks = await Task.find({ assignedTo: employeeId });
+});
+exports.findTasksByManager = findTasksByManager;
+const findTasksByEmployee = (employeeId) => __awaiter(void 0, void 0, void 0, function* () {
+    const tasks = yield Task_1.default.find({ assignedTo: employeeId });
     if (!tasks) {
         throw new Error('Task not found');
     }
     return tasks;
-};
-export const deleteTask = async (taskId) => {
-    const task = await Task.findByIdAndDelete(taskId);
+});
+exports.findTasksByEmployee = findTasksByEmployee;
+const deleteTask = (taskId) => __awaiter(void 0, void 0, void 0, function* () {
+    const task = yield Task_1.default.findByIdAndDelete(taskId);
     if (!task) {
         throw new Error('Task not found');
     }
     return task;
-};
-export const updateTask = async (taskId, taskData) => {
+});
+exports.deleteTask = deleteTask;
+const updateTask = (taskId, taskData) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(taskId, taskData, 'from deep');
     const mappedData = {
-        title: taskData?.taskTitle,
-        description: taskData?.taskDescription,
-        status: taskData?.taskStatus,
+        title: taskData === null || taskData === void 0 ? void 0 : taskData.taskTitle,
+        description: taskData === null || taskData === void 0 ? void 0 : taskData.taskDescription,
+        status: taskData === null || taskData === void 0 ? void 0 : taskData.taskStatus,
     };
-    const newTask = await Task.findByIdAndUpdate(taskId, mappedData, { new: true });
+    const newTask = yield Task_1.default.findByIdAndUpdate(taskId, mappedData, { new: true });
     if (!newTask) {
         throw new Error('Task not found');
     }
     console.log(newTask);
     return newTask;
-};
-export const getInfoByUser = async (userId) => {
+});
+exports.updateTask = updateTask;
+const getInfoByUser = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const totalTasks = await Task.countDocuments({ assignedTo: userId });
-        const completedTasks = await Task.countDocuments({
+        const totalTasks = yield Task_1.default.countDocuments({ assignedTo: userId });
+        const completedTasks = yield Task_1.default.countDocuments({
             assignedTo: userId,
             status: "completed",
         });
@@ -56,18 +76,19 @@ export const getInfoByUser = async (userId) => {
         console.error("Error fetching user task info:", error);
         throw error;
     }
-};
-export const getInfoByManager = async (userId) => {
+});
+exports.getInfoByUser = getInfoByUser;
+const getInfoByManager = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // Count total tasks assigned by the manager
-        const totalTasks = await Task.countDocuments({ assignedBy: userId });
+        const totalTasks = yield Task_1.default.countDocuments({ assignedBy: userId });
         // Count completed tasks assigned by the manager
-        const completedTasks = await Task.countDocuments({
+        const completedTasks = yield Task_1.default.countDocuments({
             assignedBy: userId,
             status: "completed",
         });
         // Count employees under this manager
-        const totalEmployees = await User.countDocuments({ managerId: userId });
+        const totalEmployees = yield User_1.default.countDocuments({ managerId: userId });
         return {
             totalTasks: totalTasks || 0,
             completedTasks: completedTasks || 0,
@@ -78,4 +99,5 @@ export const getInfoByManager = async (userId) => {
         console.error("Error fetching manager info:", error);
         throw error;
     }
-};
+});
+exports.getInfoByManager = getInfoByManager;

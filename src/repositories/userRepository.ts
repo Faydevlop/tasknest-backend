@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import User from "../models/User.ts";
+import User from "../models/User";
 
 const findByEmail = async (email: string) => {
     const user = await User.findOne({ email });

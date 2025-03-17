@@ -1,5 +1,5 @@
 
-import { loginUser,registerUser,verifyOTP} from "../services/authService.ts";
+import { loginUser,registerUser,verifyOTP} from "../services/authService";
 import { Request, Response } from 'express';
 
 export const login = async(req:Request,res:Response)=>{

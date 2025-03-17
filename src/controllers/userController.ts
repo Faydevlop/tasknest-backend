@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import {  listUsersbyManager, promoteUserToManager } from '../services/userServie.ts';
-import { AuthenticatedRequest } from '../utils/jwt.ts';
+import {  listUsersbyManager, promoteUserToManager } from '../services/userServie';
+import { AuthenticatedRequest } from '../utils/jwt';
 
 export const listUser = async(req:AuthenticatedRequest,res:Response)=>{
     const managerId = req.user?.id

@@ -1,6 +1,6 @@
 import express from 'express';
-import { createTasks, deleteTask, getinfo, getTasksList, updateTaskHandler } from '../controllers/taskController.ts';
-import authenticateJWT from '../utils/jwt.ts';
+import { createTasks, deleteTask, getinfo, getTasksList, updateTaskHandler } from '../controllers/taskController';
+import authenticateJWT from '../utils/jwt';
 
 const router = express.Router()
 

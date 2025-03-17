@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { findByEmail , createUser} from '../repositories/userRepository.js';
-import sendVerificationEmail from '../config/nodemailer.ts'
+import { findByEmail , createUser} from '../repositories/userRepository';
+import sendVerificationEmail from '../config/nodemailer'
 
 const SECRET_KEY = process.env.JWT_SECRET || 'secretKey';
 

@@ -1,5 +1,5 @@
-import Task from "../models/Task.ts";
-import User from "../models/User.ts";
+import Task from "../models/Task";
+import User from "../models/User";
 
 export const createTask = async(taskData:any)=>{
     const task = await Task.create(taskData)

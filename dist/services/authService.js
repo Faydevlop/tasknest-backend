@@ -1,39 +1,56 @@
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import { findByEmail, createUser } from '../repositories/userRepository.js';
-import sendVerificationEmail from '../config/nodemailer.ts';
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.verifyOTP = exports.registerUser = exports.loginUser = void 0;
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const userRepository_1 = require("../repositories/userRepository");
+const nodemailer_1 = __importDefault(require("../config/nodemailer"));
 const SECRET_KEY = process.env.JWT_SECRET || 'secretKey';
-export const loginUser = async (email, password) => {
-    const user = await findByEmail(email);
+const loginUser = (email, password) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield (0, userRepository_1.findByEmail)(email);
     if (!user)
         throw new Error('User not found , Please Sign in');
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = yield bcryptjs_1.default.compare(password, user.password);
     if (!isMatch)
         throw new Error('Invalid credentials');
-    const token = jwt.sign({ id: user._id, role: user.role }, SECRET_KEY, { expiresIn: '7d' });
+    const token = jsonwebtoken_1.default.sign({ id: user._id, role: user.role }, SECRET_KEY, { expiresIn: '7d' });
     return { user, token };
-};
-export const registerUser = async (name, email, password) => {
-    const userExists = await findByEmail(email);
+});
+exports.loginUser = loginUser;
+const registerUser = (name, email, password) => __awaiter(void 0, void 0, void 0, function* () {
+    const userExists = yield (0, userRepository_1.findByEmail)(email);
     if (userExists)
         throw new Error('a User already Exists in this email');
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const salt = yield bcryptjs_1.default.genSalt(10);
+    const hashedPassword = yield bcryptjs_1.default.hash(password, salt);
     const otp = Math.floor(100000 + Math.random() * 900000);
     const otpExpiry = new Date();
     otpExpiry.setMinutes(otpExpiry.getMinutes() + 5);
-    await createUser({
+    yield (0, userRepository_1.createUser)({
         name,
         email,
         otp,
         password: hashedPassword,
         otpExpires: otpExpiry,
     });
-    await sendVerificationEmail(email, otp);
+    yield (0, nodemailer_1.default)(email, otp);
     return { email };
-};
-export const verifyOTP = async (otp, tempEmail) => {
-    const user = await findByEmail(tempEmail);
+});
+exports.registerUser = registerUser;
+const verifyOTP = (otp, tempEmail) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield (0, userRepository_1.findByEmail)(tempEmail);
     if (!user) {
         throw new Error('User not found');
     }
@@ -43,8 +60,8 @@ export const verifyOTP = async (otp, tempEmail) => {
     user.isVerified = true;
     user.otp = undefined;
     user.otpExpires = undefined;
-    await user.save();
-    const token = jwt.sign({ id: user._id, role: user.role, email: user.email }, SECRET_KEY, { expiresIn: '7d' });
+    yield user.save();
+    const token = jsonwebtoken_1.default.sign({ id: user._id, role: user.role, email: user.email }, SECRET_KEY, { expiresIn: '7d' });
     return {
         user: {
             id: user._id,
@@ -56,4 +73,5 @@ export const verifyOTP = async (otp, tempEmail) => {
         },
         token,
     };
-};
+});
+exports.verifyOTP = verifyOTP;

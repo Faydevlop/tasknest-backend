@@ -1,4 +1,4 @@
-import { createTask ,findTasksByEmployee,findTasksByManager, deleteTask, updateTask, getInfoByUser, getInfoByManager} from '../repositories/taskRepository.ts';
+import { createTask ,findTasksByEmployee,findTasksByManager, deleteTask, updateTask, getInfoByUser, getInfoByManager} from '../repositories/taskRepository';
 
 export const createTaskHandler  = async(assignedBy:string,assignedTo:string,date:string,description:string,status:string,title:string)=>{
     const task = await createTask({assignedBy,assignedTo,date,description,status,title})

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import Task from "../models/Task.ts";
-import User from "../models/User.ts";
-import { assignManagerToUsers, findUsersWithSameManager, promoteUser } from "../repositories/userRepository.ts"
+import Task from "../models/Task";
+import User from "../models/User";
+import { assignManagerToUsers, findUsersWithSameManager, promoteUser } from "../repositories/userRepository"
 
 
 export const getTaskCountsByUserId = async (userId: string) => {

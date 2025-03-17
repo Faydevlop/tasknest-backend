@@ -1,6 +1,6 @@
 import express from 'express';
-import { listUser, promoteUser } from '../controllers/userController.ts';
-import authenticateJWT from '../utils/jwt.ts';
+import { listUser, promoteUser } from '../controllers/userController';
+import authenticateJWT from '../utils/jwt';
 
 const router = express.Router()
 

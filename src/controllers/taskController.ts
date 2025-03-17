@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { createTaskHandler, handleTaskListByManager, handleTaskListByUser , findTaskAndDelete ,handleUpdateTask, handleGetInfoByUser, handleGetInfoByManager } from '../services/taskService.ts';
-import { AuthenticatedRequest } from '../utils/jwt.ts';
+import { createTaskHandler, handleTaskListByManager, handleTaskListByUser , findTaskAndDelete ,handleUpdateTask, handleGetInfoByUser, handleGetInfoByManager } from '../services/taskService';
+import { AuthenticatedRequest } from '../utils/jwt';
 
 export const createTasks = async(req:AuthenticatedRequest,res:Response)=>{
     const { assignedBy,assignedTo,date,description,status,title} = req.body;

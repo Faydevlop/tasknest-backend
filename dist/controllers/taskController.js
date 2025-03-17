@@ -1,17 +1,30 @@
-import { createTaskHandler, handleTaskListByManager, handleTaskListByUser, findTaskAndDelete, handleUpdateTask, handleGetInfoByUser, handleGetInfoByManager } from '../services/taskService.ts';
-export const createTasks = async (req, res) => {
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getinfo = exports.updateTaskHandler = exports.deleteTask = exports.getTasksList = exports.createTasks = void 0;
+const taskService_1 = require("../services/taskService");
+const createTasks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { assignedBy, assignedTo, date, description, status, title } = req.body;
     console.log(req.body);
     console.log(req.user);
     try {
-        const task = await createTaskHandler(assignedBy, assignedTo, date, description, status, title);
+        const task = yield (0, taskService_1.createTaskHandler)(assignedBy, assignedTo, date, description, status, title);
         res.status(200).json({ message: 'Task Created', task });
     }
     catch (error) {
         res.status(400).json({ message: error.message });
     }
-};
-export const getTasksList = async (req, res) => {
+});
+exports.createTasks = createTasks;
+const getTasksList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.user) {
         console.log('User is undefined');
         res.status(401).json({ message: 'Unauthorized access' });
@@ -22,10 +35,10 @@ export const getTasksList = async (req, res) => {
     try {
         let tasks;
         if (userRole === 'Employee') {
-            tasks = await handleTaskListByUser(userId);
+            tasks = yield (0, taskService_1.handleTaskListByUser)(userId);
         }
         else if (userRole === 'Manager') {
-            tasks = await handleTaskListByManager(userId);
+            tasks = yield (0, taskService_1.handleTaskListByManager)(userId);
         }
         else {
             res.status(403).json({ message: 'Forbidden: Invalid Role' });
@@ -40,30 +53,33 @@ export const getTasksList = async (req, res) => {
     catch (error) {
         res.status(400).json({ message: error.message });
     }
-};
-export const deleteTask = async (req, res) => {
+});
+exports.getTasksList = getTasksList;
+const deleteTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const taskId = req.params.id;
     try {
-        await findTaskAndDelete(taskId);
+        yield (0, taskService_1.findTaskAndDelete)(taskId);
         res.status(200).json({ message: 'task deleted' });
     }
     catch (error) {
         res.status(400).json({ message: error.message });
     }
-};
-export const updateTaskHandler = async (req, res) => {
+});
+exports.deleteTask = deleteTask;
+const updateTaskHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const taskId = req.params.id;
     const { tasksId, taskTitle, taskDescription, taskStatus } = req.body;
     console.log(taskId, req.body, 'here');
     try {
-        await handleUpdateTask(taskId, { tasksId, taskTitle, taskDescription, taskStatus });
+        yield (0, taskService_1.handleUpdateTask)(taskId, { tasksId, taskTitle, taskDescription, taskStatus });
         res.status(200).json({ message: 'Task update success' });
     }
     catch (error) {
         res.status(400).json({ message: error.message });
     }
-};
-export const getinfo = async (req, res) => {
+});
+exports.updateTaskHandler = updateTaskHandler;
+const getinfo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.user) {
         console.log('User is undefined');
         res.status(401).json({ message: 'Unauthorized access' });
@@ -74,10 +90,10 @@ export const getinfo = async (req, res) => {
     try {
         let info;
         if (userRole === 'Employee') {
-            info = await handleGetInfoByUser(userId);
+            info = yield (0, taskService_1.handleGetInfoByUser)(userId);
         }
         else if (userRole === 'Manager') {
-            info = await handleGetInfoByManager(userId);
+            info = yield (0, taskService_1.handleGetInfoByManager)(userId);
         }
         else {
             res.status(403).json({ message: 'Forbidden: Invalid Role' });
@@ -92,4 +108,5 @@ export const getinfo = async (req, res) => {
     catch (error) {
         res.status(400).json({ message: error.message });
     }
-};
+});
+exports.getinfo = getinfo;
