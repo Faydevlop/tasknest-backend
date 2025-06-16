@@ -1,12 +1,14 @@
 {
-  "name": "y",
+   "name": "y",
   "version": "1.0.0",
-  "main": "index.js",
 
-  "scripts": {
-    "dev": "nodemon --exec 'node --loader ts-node/esm' src/server.ts",
-     "build": "tsc --project tsconfig.build.json && node scripts/fix-imports.js"  
-  },
+  "main": "index.js",
+ "scripts": {
+  "start": "node dist/server.js", 
+  "dev": "nodemon --exec \"node --loader ts-node/esm\" src/server.ts",
+  "build": "tsc --project tsconfig.build.json && node scripts/fix-imports.js"
+}
+,
   "author": "",
   "license": "ISC",
   "description": "",
